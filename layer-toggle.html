@@ -64,22 +64,22 @@
         background: #3074a4;
     }
       </style>
-  
+
     <nav id="menu"></nav>
     <div id='map'></div>
 
     <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoibWFyZW5hYiIsImEiOiJjam42cXNpNjIwMmxlM3lwYmxuZXAwdzh3In0.gPwDgUG31QDzSFg2Gohmtw'; // replace this with your access token
-    
+
     // Set bounds
     var bounds = [
     [35.411267, -123.585985], // Southwest coordinates
     [40.241829, -120.478656
-]  
+]
       // Northeast coordinates
     ];
-      
-      
+
+
     // Initialize map
     var map = new mapboxgl.Map({
       container: 'map',
@@ -90,74 +90,74 @@
     });
 
     map.on('style.load', function() {
-  
 
-      map.addSource("otters", { 
+
+      map.addSource("otters", {
           type: 'vector',
           url: 'mapbox://marenab.cjmlgy5kq19f931l7es55qn5k-8y5hs',
       });
 
-      map.addLayer({
-          'id': 'heatmap2',
-          'type': 'heatmap',
-          'source': 'otters',
-          'source-layer': 'Otter_Spotter_Sample_Data',
-          'layout': {
-              'visibility': 'visible',
-              //'line-join': 'round',
-              //'line-cap': 'round'
-          },
-          'paint': {// Increase the heatmap weight based on frequency and property magnitude
-            "heatmap-weight": [
-                "interpolate",
-                ["linear"],
-                ["get", "mag"],
-                0, 0,
-                6, 1
-            ],
-            // Increase the heatmap color weight weight by zoom level
-            // heatmap-intensity is a multiplier on top of heatmap-weight
-            "heatmap-intensity": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                0, 1,
-                9, 3
-            ],
-            // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
-            // Begin color ramp at 0-stop with a 0-transparancy color
-            // to create a blur-like effect.
-            "heatmap-color": [
-                "interpolate",
-                ["linear"],
-                ["heatmap-density"],
-                0, "rgba(33,102,172,0)",
-                0.2, "rgb(103,169,207)",
-                0.4, "rgb(209,229,240)",
-                0.6, "rgb(253,219,199)",
-                0.8, "rgb(239,138,98)",
-                1, "rgb(178,24,43)"
-            ],
-            // Adjust the heatmap radius by zoom level
-            "heatmap-radius": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                0, 2,
-                9, 20
-            ],
-            // Transition from heatmap to circle layer by zoom level
-            "heatmap-opacity": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                7, 1,
-                9, 0
-            ],
-        }
-    });
+    //   map.addLayer({
+    //       'id': 'heatmap2',
+    //       'type': 'heatmap',
+    //       'source': 'otters',
+    //       'source-layer': 'Otter_Spotter_Sample_Data',
+    //       'layout': {
+    //           'visibility': 'visible',
+    //           //'line-join': 'round',
+    //           //'line-cap': 'round'
+    //       },
+    //       'paint': {// Increase the heatmap weight based on frequency and property magnitude
+    //         "heatmap-weight": [
+    //             "interpolate",
+    //             ["linear"],
+    //             ["get", "mag"],
+    //             0, 0,
+    //             6, 1
+    //         ],
+    //         // Increase the heatmap color weight weight by zoom level
+    //         // heatmap-intensity is a multiplier on top of heatmap-weight
+    //         "heatmap-intensity": [
+    //             "interpolate",
+    //             ["linear"],
+    //             ["zoom"],
+    //             0, 1,
+    //             9, 3
+    //         ],
+    //         // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+    //         // Begin color ramp at 0-stop with a 0-transparancy color
+    //         // to create a blur-like effect.
+    //         "heatmap-color": [
+    //             "interpolate",
+    //             ["linear"],
+    //             ["heatmap-density"],
+    //             0, "rgba(33,102,172,0)",
+    //             0.2, "rgb(103,169,207)",
+    //             0.4, "rgb(209,229,240)",
+    //             0.6, "rgb(253,219,199)",
+    //             0.8, "rgb(239,138,98)",
+    //             1, "rgb(178,24,43)"
+    //         ],
+    //         // Adjust the heatmap radius by zoom level
+    //         "heatmap-radius": [
+    //             "interpolate",
+    //             ["linear"],
+    //             ["zoom"],
+    //             0, 2,
+    //             9, 20
+    //         ],
+    //         // Transition from heatmap to circle layer by zoom level
+    //         "heatmap-opacity": [
+    //             "interpolate",
+    //             ["linear"],
+    //             ["zoom"],
+    //             7, 1,
+    //             9, 0
+    //         ],
+    //     }
+    // });
 
-      map.addSource("subwatersheds", { 
+      map.addSource("subwatersheds", {
           type: 'vector',
           url: 'mapbox://marenab.57kon52f',
       });
@@ -177,23 +177,88 @@
         'source-layer': 'subwatersheds'
     });
 
-      map.addLayer({
-        'id': 'otter reports',
-        'type': 'circle',
-        'source': 'otters',
-        'layout': {
-            'visibility': 'visible'
-        },
-        'paint': {
-            'circle-radius': 5,
-            'circle-color': 'rgba(55,148,179,1)'
-        },
-        'source-layer': 'Otter_Spotter_Sample_Data'
+    map.addSource("otterpoints", {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/marenab/otters/master/otters.geojson',
+        cluster: true,
+        clusterMaxZoom: 14, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+    });
+
+    map.addLayer({
+      id: "vector-otters",
+      type: "geojson",
+      source: "otterpoints",
+      type: "circle",
+      "paint": {
+        // "icon-opacity": {
+        //     stops: [[7, 0], [8, 1]]
+        // },
+        "circle-color": "green",
+        
+      }
+    });
+
+    map.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "otterpoints",
+        filter: ["has", "point_count"],
+        paint: {
+            // Use step expressions (https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+            // with three steps to implement three types of circles:
+            //   * Blue, 20px circles when point count is less than 10
+            //   * Yellow, 30px circles when point count is between 10 and 25
+            //   * Green (00BE28), 40px circles when point count is greater than or equal to 25
+            "circle-color": [
+                "step",
+                ["get", "point_count"],
+                "#51bbd6",
+                10,
+                "#f1f075",
+                25,
+                "#00BE28"
+            ],
+            "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                20,
+                10,
+                30,
+                25,
+                40
+            ]
+        }
+    });
+    map.addLayer({
+        id: "cluster-count",
+        type: "symbol",
+        source: "otterpoints",
+        filter: ["has", "point_count"],
+        layout: {
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12
+        }
+    });
+    map.addLayer({
+        id: "unclustered-point",
+        type: "circle",
+        source: "otterpoints",
+        filter: ["!has", "point_count"],
+        paint: {
+            "circle-color": "#11b4da",
+            "circle-radius": 4,
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fff"
+        }
     });
 
   });
 
-var toggleableLayerIds = [ 'otter reports', 'heatmap2', 'subwatersheds2' ];
+
+
+var toggleableLayerIds = ['subwatersheds2', 'clusters', 'cluster-count', 'unclustered-point', 'vector-otters' ];
 
 for (var i = 0; i < toggleableLayerIds.length; i++) {
     var id = toggleableLayerIds[i];
@@ -221,8 +286,23 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
 
     var layers = document.getElementById('menu');
     layers.appendChild(link);
-}
 
+
+  }
+
+  map.on('click', function(e) {
+    var feature = map.queryRenderedFeatures(e.point, { layers: ['otters'] // name of the layer
+    });
+      if (!feature.length) {
+        return;
+      }
+    var features = feature[0];
+    var popup = new mapboxgl.Popup({ offset: [0, -15] })
+    .setLngLat(features.geometry.coordinates)
+    .setHTML('<h3>' + features.properties.Description + '</h3>')
+    .setLngLat(features.geometry.coordinates)
+    .addTo(map);
+  });
 
     </script>
 </body>
