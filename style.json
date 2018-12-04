@@ -1,0 +1,398 @@
+{
+    "version": 8,
+    "name": "River Otter Project -Base Map",
+    "metadata": {
+        "mapbox:autocomposite": true,
+        "mapbox:type": "template",
+        "mapbox:trackposition": false,
+        "mapbox:groups": {
+            "efc3faa7c84dddf576680fc519ad0bf1": {
+                "name": "hillshades",
+                "collapsed": false
+            },
+            "79d9ff75927f494bfa3f51df0138ef14": {
+                "name": "landuse",
+                "collapsed": true
+            }
+        },
+        "mapbox:sdk-support": {
+            "js": "0.49.0",
+            "android": "6.5.0",
+            "ios": "4.4.0"
+        }
+    },
+    "center": [0, 2.842170943040401e-14],
+    "zoom": 0,
+    "bearing": 0,
+    "pitch": 0,
+    "light": {
+        "anchor": "viewport",
+        "position": [-1.6, 3210, 100],
+        "intensity": 1,
+        "color": "hsl(0, 27%, 71%)"
+    },
+    "sources": {
+        "terrain-rgb": {
+            "url": "mapbox://mapbox.terrain-rgb",
+            "type": "raster-dem"
+        },
+        "composite": {
+            "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+            "type": "vector"
+        }
+    },
+    "sprite": "mapbox://sprites/nazaninmehrin/cjn9agsjj3wle2rlq4l5ta2ej",
+    "glyphs": "mapbox://fonts/nazaninmehrin/{fontstack}/{range}.pbf",
+    "layers": [
+        {
+            "id": "background",
+            "type": "background",
+            "layout": {},
+            "paint": {"background-color": "hsl(5, 5%, 100%)"}
+        },
+        {
+            "id": "water",
+            "type": "fill",
+            "source": "composite",
+            "source-layer": "water",
+            "layout": {},
+            "paint": {
+                "fill-color": "hsl(188, 28%, 86%)",
+                "fill-opacity": {
+                    "base": 1,
+                    "stops": [[6, 0.2], [8, 0.5], [12, 0.9]]
+                }
+            }
+        },
+        {
+            "id": "water line",
+            "type": "line",
+            "source": "composite",
+            "source-layer": "water",
+            "layout": {"line-cap": "round", "line-join": "round"},
+            "paint": {
+                "line-color": "hsl(203, 82%, 68%)",
+                "line-opacity": 0.44,
+                "line-translate": [0.5, 0.8],
+                "line-blur": 1,
+                "line-width": 1
+            }
+        },
+        {
+            "id": "crop",
+            "type": "fill",
+            "metadata": {"mapbox:group": "79d9ff75927f494bfa3f51df0138ef14"},
+            "source": "composite",
+            "source-layer": "landcover",
+            "filter": ["==", "class", "crop"],
+            "layout": {},
+            "paint": {
+                "fill-color": "hsl(51, 66%, 56%)",
+                "fill-opacity": {"base": 1, "stops": [[6, 0.05], [12, 0.15]]}
+            }
+        },
+        {
+            "id": "grass",
+            "type": "fill",
+            "metadata": {"mapbox:group": "79d9ff75927f494bfa3f51df0138ef14"},
+            "source": "composite",
+            "source-layer": "landcover",
+            "filter": ["==", "class", "grass"],
+            "layout": {},
+            "paint": {
+                "fill-color": "hsl(101, 53%, 42%)",
+                "fill-opacity": {"base": 1, "stops": [[6, 0.08], [10, 0.02]]}
+            }
+        },
+        {
+            "id": "scrub",
+            "type": "fill",
+            "metadata": {"mapbox:group": "79d9ff75927f494bfa3f51df0138ef14"},
+            "source": "composite",
+            "source-layer": "landcover",
+            "filter": ["==", "class", "scrub"],
+            "layout": {},
+            "paint": {"fill-color": "hsl(17, 81%, 43%)", "fill-opacity": 0.08}
+        },
+        {
+            "id": "wood",
+            "type": "fill",
+            "metadata": {"mapbox:group": "79d9ff75927f494bfa3f51df0138ef14"},
+            "source": "composite",
+            "source-layer": "landcover",
+            "filter": ["==", "class", "wood"],
+            "layout": {},
+            "paint": {
+                "fill-color": "hsl(101, 48%, 28%)",
+                "fill-opacity": {"base": 1, "stops": [[7, 0.08], [10, 0.02]]}
+            }
+        },
+        {
+            "id": "parks",
+            "type": "fill",
+            "metadata": {"mapbox:group": "79d9ff75927f494bfa3f51df0138ef14"},
+            "source": "composite",
+            "source-layer": "landuse",
+            "filter": ["==", "class", "park"],
+            "layout": {},
+            "paint": {
+                "fill-color": "hsl(101, 53%, 42%)",
+                "fill-opacity": {"base": 1, "stops": [[6, 0.08], [10, 0.1]]}
+            }
+        },
+        {
+            "id": "waterways",
+            "type": "line",
+            "source": "composite",
+            "source-layer": "waterway",
+            "layout": {},
+            "paint": {
+                "line-color": "hsl(188, 28%, 86%)",
+                "line-width": {"base": 1, "stops": [[8, 0.75], [12, 2.5]]}
+            }
+        },
+        {
+            "id": "water label",
+            "type": "symbol",
+            "source": "composite",
+            "source-layer": "water_label",
+            "layout": {
+                "text-field": "{name_en}",
+                "text-size": {
+                    "base": 1,
+                    "stops": [[7, 10], [10, 12], [16, 18]]
+                },
+                "text-font": ["Alegreya Italic", "Arial Unicode MS Regular"],
+                "text-transform": "lowercase",
+                "text-max-width": 6
+            },
+            "paint": {
+                "text-color": "hsl(208, 65%, 33%)",
+                "text-halo-width": 1,
+                "text-halo-color": "hsl(213, 20%, 98%)",
+                "text-halo-blur": 0.4
+            }
+        },
+        {
+            "id": "terrain",
+            "type": "hillshade",
+            "source": "terrain-rgb",
+            "maxzoom": 13,
+            "layout": {},
+            "paint": {
+                "hillshade-exaggeration": 0.36,
+                "hillshade-shadow-color": "#5b5757"
+            }
+        },
+        {
+            "id": "extreme dark shadow",
+            "type": "fill",
+            "metadata": {"mapbox:group": "efc3faa7c84dddf576680fc519ad0bf1"},
+            "source": "composite",
+            "source-layer": "hillshade",
+            "filter": ["all", ["==", "class", "shadow"], ["==", "level", 56]],
+            "layout": {"visibility": "none"},
+            "paint": {
+                "fill-color": "hsl(0, 0%, 24%)",
+                "fill-outline-color": "hsl(203, 39%, 30%)",
+                "fill-opacity": 0.2
+            }
+        },
+        {
+            "id": "dark shadow",
+            "type": "fill",
+            "metadata": {"mapbox:group": "efc3faa7c84dddf576680fc519ad0bf1"},
+            "source": "composite",
+            "source-layer": "hillshade",
+            "filter": ["all", ["==", "class", "shadow"], ["==", "level", 67]],
+            "layout": {"visibility": "none"},
+            "paint": {"fill-color": "hsl(0, 0%, 24%)", "fill-opacity": 0.2}
+        },
+        {
+            "id": "med shadow",
+            "type": "fill",
+            "metadata": {"mapbox:group": "efc3faa7c84dddf576680fc519ad0bf1"},
+            "source": "composite",
+            "source-layer": "hillshade",
+            "filter": ["all", ["==", "class", "shadow"], ["==", "level", 78]],
+            "layout": {"visibility": "none"},
+            "paint": {"fill-color": "hsl(0, 1%, 32%)", "fill-opacity": 0.2}
+        },
+        {
+            "id": "shadow",
+            "type": "fill",
+            "metadata": {"mapbox:group": "efc3faa7c84dddf576680fc519ad0bf1"},
+            "source": "composite",
+            "source-layer": "hillshade",
+            "filter": ["all", ["==", "class", "shadow"], ["==", "level", 78]],
+            "layout": {"visibility": "none"},
+            "paint": {"fill-color": "#bfbfbf", "fill-opacity": 0.2}
+        },
+        {
+            "id": "faint shadow",
+            "type": "fill",
+            "metadata": {"mapbox:group": "efc3faa7c84dddf576680fc519ad0bf1"},
+            "source": "composite",
+            "source-layer": "hillshade",
+            "filter": ["all", ["==", "class", "shadow"], ["==", "level", 89]],
+            "layout": {"visibility": "none"},
+            "paint": {"fill-color": "#5b5757", "fill-opacity": 0.2}
+        },
+        {
+            "id": "ferries",
+            "type": "line",
+            "source": "composite",
+            "source-layer": "road",
+            "filter": ["==", "class", "ferry"],
+            "layout": {},
+            "paint": {
+                "line-blur": 0,
+                "line-color": "hsl(188, 26%, 81%)",
+                "line-opacity": 0.5,
+                "line-dasharray": [4, 2],
+                "line-width": {"base": 1, "stops": [[8, 0.75], [16, 1.5]]}
+            }
+        },
+        {
+            "id": "major roads",
+            "type": "line",
+            "source": "composite",
+            "source-layer": "road",
+            "filter": ["in", "class", "motorway", "primary", "trunk"],
+            "layout": {},
+            "paint": {
+                "line-color": "hsl(0, 0%, 95%)",
+                "line-blur": 0,
+                "line-width": {"base": 1, "stops": [[5, 0.5], [18, 1]]},
+                "line-opacity": 0.5
+            }
+        },
+        {
+            "id": "state lines",
+            "type": "line",
+            "source": "composite",
+            "source-layer": "admin",
+            "filter": ["all", ["==", "admin_level", 4], ["==", "maritime", 0]],
+            "layout": {"line-cap": "round", "line-join": "round"},
+            "paint": {
+                "line-color": "hsl(360, 0%, 0%)",
+                "line-width": {"base": 1.2, "stops": [[5, 0.75], [12, 2]]},
+                "line-opacity": {"base": 1, "stops": [[4, 0.35], [10, 0.7]]},
+                "line-dasharray": {
+                    "base": 1,
+                    "stops": [[0, [1, 2]], [6, [2, 4]]]
+                }
+            }
+        },
+        {
+            "id": "road-label-large",
+            "type": "symbol",
+            "source": "composite",
+            "source-layer": "road_label",
+            "filter": ["in", "class", "motorway", "primary"],
+            "layout": {
+                "text-size": {"base": 1, "stops": [[9, 9], [20, 14]]},
+                "text-max-angle": 30,
+                "text-font": ["Overpass Bold", "Arial Unicode MS Regular"],
+                "symbol-placement": "line",
+                "text-padding": 1,
+                "text-rotation-alignment": "map",
+                "text-pitch-alignment": "viewport",
+                "text-field": "{name_en}",
+                "text-letter-spacing": 0.01
+            },
+            "paint": {
+                "text-color": "hsl(0, 0%, 35%)",
+                "text-halo-color": "hsla(0, 0%, 100%, 0.75)",
+                "text-halo-width": 1,
+                "text-halo-blur": 1
+            }
+        },
+        {
+            "id": "parks labels",
+            "type": "symbol",
+            "source": "composite",
+            "source-layer": "poi_label",
+            "filter": [
+                "all",
+                ["!=", "maki", "glacier"],
+                ["!=", "name", "Marine Reserve"],
+                ["<=", "localrank", 3],
+                [
+                    "in",
+                    "maki",
+                    "campsite",
+                    "cemetery",
+                    "garden",
+                    "golf",
+                    "park",
+                    "picnic-site",
+                    "playground",
+                    "zoo"
+                ]
+            ],
+            "layout": {
+                "text-line-height": 1,
+                "text-size": {
+                    "base": 1.2,
+                    "stops": [[6, 10], [8, 11], [12, 13]]
+                },
+                "icon-image": {
+                    "base": 1,
+                    "stops": [[13, "{maki}-11"], [14, "{maki}-15"]]
+                },
+                "text-font": [
+                    "Alegreya ExtraBold Italic",
+                    "Arial Unicode MS Regular"
+                ],
+                "text-offset": [0, 0.65],
+                "text-rotation-alignment": "viewport",
+                "text-anchor": "top",
+                "text-field": "{name_en}",
+                "text-letter-spacing": {
+                    "base": 1,
+                    "stops": [[6, 0], [8, 0.05]]
+                },
+                "text-max-width": 8.5
+            },
+            "paint": {
+                "text-color": "hsl(64, 59%, 45%)",
+                "text-opacity": 1,
+                "text-halo-color": "hsl(88, 0%, 100%)",
+                "text-halo-blur": 0,
+                "text-halo-width": 0.75,
+                "icon-opacity": 0
+            }
+        },
+        {
+            "id": "state labels",
+            "type": "symbol",
+            "source": "composite",
+            "source-layer": "state_label",
+            "minzoom": 2,
+            "layout": {
+                "text-field": {
+                    "base": 1,
+                    "stops": [[4, "{abbr}"], [5, "{name_en}"]]
+                },
+                "text-size": {"base": 1, "stops": [[3, 8], [6, 20], [10, 30]]},
+                "text-font": ["Overpass ExtraBold", "Arial Unicode MS Regular"],
+                "text-transform": "uppercase",
+                "text-letter-spacing": 0.05
+            },
+            "paint": {
+                "text-color": "hsla(132, 39%, 18%, 0.39)",
+                "text-halo-width": {"base": 1, "stops": [[6, 1], [10, 1.5]]},
+                "text-halo-color": "hsl(132, 20%, 93%)",
+                "text-halo-blur": 0,
+                "text-opacity": {"base": 1, "stops": [[4, 0.75], [6, 1]]}
+            }
+        }
+    ],
+    "created": "2018-10-14T19:54:47.362Z",
+    "id": "cjn9agsjj3wle2rlq4l5ta2ej",
+    "modified": "2018-10-15T00:03:58.944Z",
+    "owner": "nazaninmehrin",
+    "visibility": "public",
+    "draft": false
+}
