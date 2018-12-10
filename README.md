@@ -14,7 +14,7 @@ The interactive map is being built in the index.html file - it currently uses a 
 
 # Data Sources
 
-The California Protected Areas from : U.S. Geological Survey (USGS) https://gapanalysis.usgs.gov/padus/
+The California Protected Areas from : U.S. Geological Survey (USGS) https://gapanalysis.usgs.gov/padus/)
 
 The Wetlands Data from: U.S. Fish & Wildlife Service (https://www.fws.gov/wetlands/data/State-Downloads.html)
 
