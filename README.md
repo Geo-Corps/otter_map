@@ -1,11 +1,11 @@
 # otter_map
 
 # Basemap style
-The final map will use Mapbox Studio Basemap from the following URL:
+The final map will use Mapbox Studio Basemap from the following URLs:
 
-mapbox://styles/riverotterecologyproject/cjpkpm3kt07nd2rp3xqk0u1kp
+Style URL: mapbox://styles/riverotterecologyproject/cjpkpm3kt07nd2rp3xqk0u1kp
 
-https://api.mapbox.com/styles/v1/riverotterecologyproject/cjpkpm3kt07nd2rp3xqk0u1kp.html?fresh=true&title=true&access_token=pk.eyJ1Ijoicml2ZXJvdHRlcmVjb2xvZ3lwcm9qZWN0IiwiYSI6ImNqcGhod3N0eDB3dGIzcG82M2s3cTVwNDQifQ.5bbtVkbjyIQB1mnaetHwdQ#7.4/37.577763/-120.882547/0
+Share URL: https://api.mapbox.com/styles/v1/riverotterecologyproject/cjpkpm3kt07nd2rp3xqk0u1kp.html?fresh=true&title=true&access_token=pk.eyJ1Ijoicml2ZXJvdHRlcmVjb2xvZ3lwcm9qZWN0IiwiYSI6ImNqcGhod3N0eDB3dGIzcG82M2s3cTVwNDQifQ.5bbtVkbjyIQB1mnaetHwdQ#7.4/37.577763/-120.882547/0
 
 
 # Interactive map
