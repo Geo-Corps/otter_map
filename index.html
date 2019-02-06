@@ -44,7 +44,7 @@
         }
 
         .mapboxgl-popup-content h3 {
-			  background: #91c949;
+			  background: #47d61b;
 			  color: #fff;
 			  margin: 0;
 			  display: block;
@@ -74,7 +74,7 @@
 		}
 
       </style>
-  
+
     <div id='map'></div>
     <div id='menu'>
       <input id='cjpkpm3kt07nd2rp3xqk0u1kp' type='radio' name='rtoggle' value='basemap' checked='checked'>
@@ -85,11 +85,11 @@
 
     <script>
     mapboxgl.accessToken = 'pk.eyJ1Ijoicml2ZXJvdHRlcmVjb2xvZ3lwcm9qZWN0IiwiYSI6ImNqcGhod3N0eDB3dGIzcG82M2s3cTVwNDQifQ.5bbtVkbjyIQB1mnaetHwdQ'; // replace this with your access token
-    
+
     // Set bounds
     var bounds = [
-    [-131.0229492, 34.9399851], // Southwest coordinates
-    [-114.6313476, 41.8204550]  // Northeast coordinates
+    [-125.339515, 23.089636], // Southwest coordinates
+    [-62.346295, 50.046593]  // Northeast coordinates
     ];
     // Initialize map
     var map = new mapboxgl.Map({
@@ -106,7 +106,7 @@
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl());
   function mapReset() {
-    
+
   }
   map.on('style.load', function() {
     mapReset();
@@ -114,7 +114,7 @@
     //map.on('load', function() {
     // Add a new source from our GeoJSON data and set the
     // 'cluster' option to true. GL-JS will add the point_count property to your source data.
-    map.addSource("otterpoints", { 
+    map.addSource("otterpoints", {
         type: 'geojson',
         data: 'https://raw.githubusercontent.com/Geo-Corps/otter_map/master/otters.geojson',
         cluster: true,
@@ -170,7 +170,7 @@
         filter: ["!has", "point_count"],
         paint: {
             "circle-color": ["case",
-            	["!=", 
+            	["!=",
             	["get", "Dead"],
             	"Dead"
 	            ],
@@ -200,7 +200,7 @@
     for (var i = 0; i < inputs.length; i++) {
         inputs[i].onclick = switchLayer;
       }
-    
+
  // Zoom on a cluster on click
     map.on('click', 'clusters', function (e) {
         var features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
@@ -220,7 +220,7 @@
     map.on('mouseleave', 'clusters', function () {
         map.getCanvas().style.cursor = '';
     });
-        
+
     // Change the cursor to a pointer when the mouse is over the unclustered-point layer.
     map.on('mouseenter', 'unclustered-point', function () {
         map.getCanvas().style.cursor = 'pointer';
@@ -229,11 +229,12 @@
     map.on('mouseleave', 'unclustered-point', function () {
         map.getCanvas().style.cursor = '';
     });
-  
+
 // Add popups
     map.on('click', 'unclustered-point', function (e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var description = e.features[0].properties.Description;
+        var notes = e.features[0].properties.Notes;
 
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
@@ -257,7 +258,7 @@
 
       new mapboxgl.Popup({offset: popupOffsets})
       .setLngLat(coordinates)
-      .setHTML('<h3>Otter report:</h3>' + '<h4>' + description + '</h4>')
+      .setHTML('<h3>Otter report:</h3>' + '<h4>Description:<h4>'+ description + '<h4>Notes:<h4>' +  notes)
       .addTo(map);
     });
   });
