@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Otter prototype</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+
+      <style>
+        #menu {
+          position: absolute;
+          background: #fff;
+          padding: 10px;
+          font-family: 'Open Sans', sans-serif;
+        }
+
+        .mapboxgl-popup-close-button {
+			  display: none;
+			}
+
+        .mapboxgl-popup-content {
+			  font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+			  padding: 0;
+			  width: 180px;
+			}
+
+        .mapboxgl-popup-content-wrapper {
+        	padding: 1%;
+        }
+
+        .mapboxgl-popup-content h3 {
+			  background: #47d61b;
+			  color: #fff;
+			  margin: 0;
+			  display: block;
+			  padding: 10px;
+			  border-radius: 3px 3px 0 0;
+			  font-weight: 700;
+			  margin-top: -15px;
+			}
+
+		.mapboxgl-popup-content h4 {
+			  margin: 0;
+			  display: block;
+			  padding: 10px;
+			  font-weight: 400;
+			}
+
+		.mapboxgl-popup-content div {
+			  padding: 10px;
+			}
+
+		.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+		  margin-top: 15px;
+		}
+
+		.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+		  border-bottom-color: #47d61b;
+		}
+
+      </style>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.css' type='text/css' />
+
+    <div id='map'></div>
+    <div id='menu'>
+      <input id='cjpkpm3kt07nd2rp3xqk0u1kp' type='radio' name='rtoggle' value='basemap' checked='checked'>
+      <label for='basemap'>basemap</label>
+      <input id='cjpm0wrjc1ft42rqmog4tbm9x' type='radio' name='rtoggle' value='satellite'>
+      <label for='satellite'>satellite</label>
+    </div>
+
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoicml2ZXJvdHRlcmVjb2xvZ3lwcm9qZWN0IiwiYSI6ImNqcGhod3N0eDB3dGIzcG82M2s3cTVwNDQifQ.5bbtVkbjyIQB1mnaetHwdQ'; // replace this with your access token
+
+    // Set bounds
+    var bounds = [
+    [-125.339515, 23.089636], // Southwest coordinates
+    [-62.346295, 50.046593]  // Northeast coordinates
+    ];
+    // Initialize map
+    var map = new mapboxgl.Map({
+      attributionControl: false,
+      container: 'map',
+      style: 'mapbox://styles/riverotterecologyproject/cjpkpm3kt07nd2rp3xqk0u1kp', // replace this with your style URL
+      center: [-121.500,38.304],
+      zoom: 6.8,
+      maxBounds: bounds // Sets bounds as max
+    });
+    var hoverdStateID = null;
+    map.addControl(new mapboxgl.AttributionControl({
+        compact: true
+    }));
+    //Add Geocoder
+    map.addControl(new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken
+    }));
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+      function mapReset() {
+
+    }
+
+    map.on('style.load', function() {
+      mapReset();
+      // Add clusters
+      //map.on('load', function() {
+      // Add a new source from our GeoJSON data and set the
+      // 'cluster' option to true. GL-JS will add the point_count property to your source data.
+      map.addSource("otterpoints", {
+          type: 'geojson',
+          data: 'https://raw.githubusercontent.com/Geo-Corps/otter_map/master/otters.geojson',
+          cluster: true,
+          clusterMaxZoom: 14, // Max zoom to cluster points on
+          clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+      });
+      map.addLayer({
+          id: "clusters",
+          type: "circle",
+          source: "otterpoints",
+          filter: ["has", "point_count"],
+          paint: {
+              // Use step expressions (https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+              // with three steps to implement three types of circles:
+              //   * color 1 (91c949), 10px circles when point count is less than 10
+              //   * color 2 (6b9436), 20px circles when point count is between 10 and 25
+              //   * color3 (466123), 30px circles when point count is greater than or equal to 25
+              "circle-color": [
+                  "step",
+                  ["get", "point_count"],
+                  "#3cd80a",
+                  10,
+                  "#288c08",
+                  25,
+                  "#175902"
+              ],
+              "circle-radius": [
+                  "step",
+                  ["get", "point_count"],
+                  10,
+                  10,
+                  20,
+                  25,
+                  30
+              ]
+          }
+      });
+      map.addLayer({
+          id: "cluster-count",
+          type: "symbol",
+          source: "otterpoints",
+          filter: ["has", "point_count"],
+          layout: {
+              "text-field": "{point_count_abbreviated}",
+              "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+              "text-size": 12
+          }
+      });
+      map.addLayer({
+          id: "unclustered-point",
+          type: "circle",
+          source: "otterpoints",
+          filter: ["!has", "point_count"],
+          paint: {
+              "circle-color": ["case",
+              	["!=",
+              	["get", "Dead"],
+              	"Dead"
+  	            ],
+  	           	"#3cd80a",
+  	            [
+  		            "match",
+  		            ["get", "Dead"],
+  		            ["", "Dead"],
+  		            true,
+  		            false
+  	            ],
+  	            "#676d5f",
+  	            "hsla(0, 0%, 0%, 0)"
+  	            ],
+              "circle-radius": 4,
+              "circle-stroke-width": 1,
+              "circle-stroke-color": "#fff"
+          }
+      });
+      map.addLayer({
+          id: "unclustered-point",
+          type: "circle",
+          source: "otterpoints",
+          filter: ["!has", "point_count"],
+          paint: {
+              "circle-color": ["case",
+              	["!=",
+              	["get", "Dead"],
+              	"Dead"
+  	            ],
+  	           	"#3cd80a",
+  	            [
+  		            "match",
+  		            ["get", "Dead"],
+  		            ["", "Dead"],
+  		            true,
+  		            false
+  	            ],
+  	            "#ce2114",
+  	            "hsla(0, 0%, 0%, 0)"
+  	            ],
+              "circle-radius": 4,
+              "circle-stroke-width": 1,
+              "circle-stroke-color": "#fff"
+          }
+      });
+  // Toggle styles
+      var layerList = document.getElementById('menu');
+      var inputs = layerList.getElementsByTagName('input');
+      function switchLayer(layer) {
+        var layerId = layer.target.id;
+        map.setStyle('mapbox://styles/riverotterecologyproject/' + layerId);
+      }
+      for (var i = 0; i < inputs.length; i++) {
+          inputs[i].onclick = switchLayer;
+      }
+
+   // Zoom on a cluster on click
+      map.on('click', 'clusters', function (e) {
+          var features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+          var clusterId = features[0].properties.cluster_id;
+          map.getSource('otterpoints').getClusterExpansionZoom(clusterId, function (err, zoom) {
+              if (err)
+                  return;
+              map.easeTo({
+                  center: features[0].geometry.coordinates,
+                  zoom: zoom
+              });
+          });
+      });
+      map.on('mouseenter', 'clusters', function () {
+          map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseleave', 'clusters', function () {
+          map.getCanvas().style.cursor = '';
+      });
+
+      // Change the cursor to a pointer when the mouse is over the unclustered-point layer.
+      map.on('mouseenter', 'unclustered-point', function () {
+          map.getCanvas().style.cursor = 'pointer';
+      });
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'unclustered-point', function () {
+          map.getCanvas().style.cursor = '';
+      });
+
+  // Add popups
+      map.on('click', 'unclustered-point', function (e) {
+          var coordinates = e.features[0].geometry.coordinates.slice();
+          var description = e.features[0].properties.Description;
+          var notes = e.features[0].properties.Notes;
+
+          // Ensure that if the map is zoomed out such that multiple
+          // copies of the feature are visible, the popup appears
+          // over the copy being pointed to.
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+              coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+          }
+
+        //var features = feature[0];
+        var markerHeight = 20, markerRadius = 10, linearOffset = 25;
+	var popupOffsets = {
+	 'top': [0, 0],
+	 'top-left': [0,0],
+	 'top-right': [0,0],
+	 'bottom': [0, -markerHeight],
+	 'bottom-left': [linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+	 'bottom-right': [-linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+	 'left': [markerRadius, (markerHeight - markerRadius) * -1],
+	 'right': [-markerRadius, (markerHeight - markerRadius) * -1]
+	 };
+
+      new mapboxgl.Popup({offset: popupOffsets})
+      .setLngLat(coordinates)
+      .setHTML('<h3>Otter report:</h3>' + '<h4>Description:<h4>'+ description + '<h4>Notes:<h4>' +  notes)
+      .addTo(map);
+    });
+  });
+    </script>
+</body>
+</html>
