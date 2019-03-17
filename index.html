@@ -154,6 +154,16 @@
               "circle-stroke-color": "#fff"
           }
       });
+	map.addLayer({
+          id: "transparent-point",
+          type: "circle",
+          source: "otterpoints",
+          filter: ["!has", "point_count"],
+          paint: {
+              "circle-opacity": 0,
+              "circle-radius": 10
+          }
+      	});
   // Toggle styles
       var layerList = document.getElementById('menu');
       var inputs = layerList.getElementsByTagName('input');
@@ -175,7 +185,7 @@
       });
 
   // Add popups
-      map.on('click', 'unclustered-point', function (e) {
+      map.on('click', 'transparent-point', function (e) {
           var coordinates = e.features[0].geometry.coordinates.slice();
           var description = e.features[0].properties.Description;
           var notes = e.features[0].properties.Notes;
