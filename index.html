@@ -140,7 +140,7 @@
       mapReset();
       map.addSource("otterpoints", {
           type: 'geojson',
-          data: 'https://raw.githubusercontent.com/Geo-Corps/otter_map/master/otters.geojson',
+          data: 'https://services2.arcgis.com/9bqwKmiYlVqrIEBW/ArcGIS/rest/services/Otter_Spotter_Web_Form_View/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson',
       });
       map.addLayer({
           id: "unclustered-point",
@@ -150,13 +150,13 @@
           paint: {
               "circle-color": ["case",
               	["!=",
-              	["get", "Dead"],
+              	["get", "Status"],
               	"Dead"
   	            ],
   	           	"#3cd80a",
   	            [
   		            "match",
-  		            ["get", "Dead"],
+  		            ["get", "Status"],
   		            ["", "Dead"],
   		            true,
   		            false
@@ -202,8 +202,10 @@
   // Add popups
       map.on('click', 'transparent-point', function (e) {
           var coordinates = e.features[0].geometry.coordinates.slice();
-          var description = e.features[0].properties.Description;
-          var notes = e.features[0].properties.Notes;
+          var number = e.features[0].properties.field_6;
+          var date = e.features[0].properties.field_3;
+          var location = e.features[0].properties.field_25;
+          var notes = e.features[0].properties.field_16;
 
           // Ensure that if the map is zoomed out such that multiple
           // copies of the feature are visible, the popup appears
@@ -227,7 +229,7 @@
 
       new mapboxgl.Popup({offset: popupOffsets})
       .setLngLat(coordinates)
-      .setHTML('<h3>Otter report:</h3>' + '<h4>Description:<h4>'+ description + '<h4>Notes:<h4>' +  notes)
+      .setHTML('<h3>Otter report</h3>' + '<h4>Number:<h4>'+ number + '<h4>Date and location:<h4>' + date + ', ' + location + '<h4>Notes:<h4>' +  notes)
       .addTo(map);
     });
   });
