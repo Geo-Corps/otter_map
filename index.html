@@ -76,6 +76,31 @@
 		.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
 		  border-bottom-color: #47d61b;
 		}
+	      
+	      .legend {
+		background-color: #fff;
+		border-radius: 3px;
+		bottom: 30px;
+		box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+		font: 12px/20px 'Open Sans', sans-serif;
+		padding: 10px;
+		position: absolute;
+		right: 10px;
+		bottom: 70px;
+		z-index: 1;
+		}
+
+		.legend h4 {
+		margin: 0 0 10px;
+		}
+
+		.legend div span {
+		border-radius: 50%;
+		display: inline-block;
+		height: 10px;
+		margin-right: 5px;
+		width: 10px;
+		}
 
       </style>
 
@@ -89,6 +114,11 @@
       <input id='cjpm0wrjc1ft42rqmog4tbm9x' type='radio' name='rtoggle' value='satellite'>
       <label for='satellite'>satellite</label>
     </div>
+	<div id='circle-legend' class='legend'>
+	<h4>Legend</h4>
+	<div><span style='background-color: #3cd80a'></span>Live otters</div>
+	<div><span style='background-color: #676d5f'></span>Dead otters</div>
+	</div>
 
     <script>
     mapboxgl.accessToken = 'pk.eyJ1Ijoicml2ZXJvdHRlcmVjb2xvZ3lwcm9qZWN0IiwiYSI6ImNqcGhod3N0eDB3dGIzcG82M2s3cTVwNDQifQ.5bbtVkbjyIQB1mnaetHwdQ'; // replace this with your access token
