@@ -233,7 +233,9 @@
       map.on('click', 'transparent-point', function (e) {
           var coordinates = e.features[0].geometry.coordinates.slice();
           var number = e.features[0].properties.field_6;
-          var date = e.features[0].properties.field_3;
+          var timestamp = (e.features[0].properties.field_3);
+          var myDate = new Date(timestamp);
+          var str = myDate.toDateString();
           var location = e.features[0].properties.field_25;
           var notes = e.features[0].properties.field_16;
 
@@ -259,7 +261,7 @@
 
       new mapboxgl.Popup({offset: popupOffsets})
       .setLngLat(coordinates)
-      .setHTML('<h3>Otter report</h3>' + '<h4>Number:<h4>'+ number + '<h4>Date and location:<h4>' + date + ', ' + location + '<h4>Notes:<h4>' +  notes)
+      .setHTML('<h3>Otter report</h3>' + '<h4>Number:<h4>'+ number + '<h4>Date and location:<h4>' + str + ', ' + location + '<h4>Notes:<h4>' +  notes)
       .addTo(map);
     });
   });
